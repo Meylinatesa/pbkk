@@ -9,7 +9,7 @@
             <h3 class="recipe-title">{{ recipe.title }}</h3>
             <p>Preparation time: {{ recipe.readyInMinutes }} minutes</p>
             <p>Number of servings: {{ recipe.servings }}</p>
-            <a :href="'https://spoonacular.com/recipes/' + recipe.title.replace(/\s+/g, '-') + '-' + recipe.id" target="_blank" class="recipe-link">Go to Recipe</a>
+            <a :href="'https://spoonacular.com/recipes/' + (recipe.title ? recipe.title.replace(/\s+/g, '-') : '') + '-' + recipe.id" target="_blank" class="recipe-link">Go to Recipe</a>
           </div>
         </div>
       </div>
@@ -19,35 +19,55 @@
       </div>
   
       <!-- Plus Icon Button -->
-      <button @click="addRecipe" class="plus-button">
-        +
-      </button>
+      <router-link to="/add-recipe">
+        <button class="plus-button">+</button>
+      </router-link>
+
+      <!-- <RecipeForm @add-recipe="addRecipe" /> -->
     </div>
   </template>
   
   <script>
+  import RecipeForm from './RecipeForm.vue';
+
   export default {
     name: "ResepKu",
+    components: {
+      RecipeForm
+    },
     data() {
       return {
         savedRecipes: []
       };
     },
     mounted() {
-      this.fetchSavedRecipes();
+      if (!this.savedRecipes.length) {
+        this.fetchSavedRecipes();  // Hanya panggil sekali saat komponen dimuat
+      }
     },
     methods: {
       // Fetch saved recipes from localStorage or backend API
       fetchSavedRecipes() {
         // Example: Assuming recipes are saved in localStorage
         const recipes = JSON.parse(localStorage.getItem("savedRecipes")) || [];
-        this.savedRecipes = recipes;
+        //console.log("Fetched recipes from localStorage:", recipes); // Debugging log
+        this.savedRecipes = recipes.filter(recipe => recipe.title);
       },
       // Function to add a recipe
-      addRecipe() {
-        this.$router.push('/add-recipe'); // Replace with your route to add a recipe page
+      addRecipe(newRecipe) {
+        // Add the new recipe to the saved recipes array
+        this.savedRecipes.push(newRecipe);
+        // Optionally, save it to localStorage if needed
+        localStorage.setItem('savedRecipes', JSON.stringify(this.savedRecipes));
+        //console.log("Saved recipes to localStorage:", this.savedRecipes); // Debugging log
       }
-    }
+    },
+    // watch: {
+    //   // Watch for changes in localStorage
+    //   savedRecipes: function() {
+    //     this.fetchSavedRecipes(); // Refresh the list when recipes change
+    //   }
+    // }
   };
   </script>
   

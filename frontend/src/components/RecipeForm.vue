@@ -184,8 +184,16 @@ export default {
           }
         );
 
+        const newRecipe = response.data.recipe;
+
+        // Add the new recipe to localStorage (if using localStorage)
+        let savedRecipes = JSON.parse(localStorage.getItem("savedRecipes")) || [];
+        savedRecipes.push(newRecipe);
+        localStorage.setItem("savedRecipes", JSON.stringify(savedRecipes));
+
         console.log('Response:', response.data);
         this.$router.push('/resepku');
+        this.$emit('add-recipe', newRecipe);
       } catch (error) {
         console.error('Error:', error);
         alert(error.response?.data?.message || error.message);

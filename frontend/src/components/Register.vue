@@ -117,7 +117,7 @@ export default {
         console.log("Response data:", response.data);
         
         // Show success message
-        alert("Registrasi berhasil!");
+        alert("Registrasi berhasil! Silahkan login untuk mengakses akun Anda. "); 
         
         // Redirect to home
         this.$router.push({ name: 'Home' });

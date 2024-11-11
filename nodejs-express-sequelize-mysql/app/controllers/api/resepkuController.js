@@ -5,25 +5,23 @@ const path = require("path");
 const resepkuController = {
   async resep(req, res) {
     try {
-      console.log("Request received:", req.body);  // Check request body
-      console.log("Uploaded file:", req.file);     // Check uploaded file if exists
+      console.log("Request received:", req.body);  // Log to check request body
+      console.log("Uploaded file:", req.file);     // Log to check uploaded file if exists
 
-      // Destructure the recipe data from the request body
-      //const { title, description, servings, prepTime, cookTime, totalTime, userEmail } = req.body;
-      
-      // Parse numeric values
-      const prepTime = parseInt(req.body.prepTime);
-      const cookTime = parseInt(req.body.cookTime);
-      const totalTime = parseInt(req.body.totalTime);
-      const servings = parseInt(req.body.servings);
+      // Parse numeric values with default values in case of NaN
+      const prepTime = parseInt(req.body.prepTime) || 0;
+      const cookTime = parseInt(req.body.cookTime) || 0;
+      const totalTime = parseInt(req.body.totalTime) || 0;
+      const servings = parseInt(req.body.servings) || 0;
 
       // Handle the image upload if present
       let imagePath = null;
       if (req.file) {
-        // Save the image in a specific directory (e.g., 'uploads')
-        imagePath = path.join('uploads', req.file.filename);
+        // Set the image path relative to where it will be accessible
+        imagePath = path.join('/uploads', req.file.filename);
       }
 
+      // Create new recipe with provided data
       const newRecipe = await Recipe.create({
         title: req.body.title,
         description: req.body.description,
@@ -41,7 +39,7 @@ const resepkuController = {
         recipe: newRecipe,
       });
     } catch (error) {
-      console.error(error);
+      console.error("Error while adding recipe:", error);
       res.status(500).json({
         message: "Failed to add recipe",
         error: error.message,

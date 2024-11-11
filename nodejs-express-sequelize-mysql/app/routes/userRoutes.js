@@ -13,6 +13,6 @@ router.post("/register", registerController.register);
 // Login route
 router.post("/login", loginController.login);
 
-router.post("/add-recipe", resepkuController.resep);
+// router.post("/add-recipe", resepkuController.resep);
 
 module.exports = router;

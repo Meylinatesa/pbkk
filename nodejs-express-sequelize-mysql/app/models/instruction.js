@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       recipe_id: {
         type: DataTypes.INTEGER,
         references: {
-          model: 'Recipes', // nama tabel di database
+          model: 'recipes', // nama tabel di database
           key: 'id',
         },
       },

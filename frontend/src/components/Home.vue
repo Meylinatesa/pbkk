@@ -84,9 +84,9 @@
         </button>
       </div>
 
-      <!-- Recipe Grid -->
+     <!-- Recipe Grid -->
       <div class="recipe-grid">
-        <div v-for="recipe in recipes" :key="recipe.id" class="recipe-card">
+        <div v-for="recipe in filteredRecipes" :key="recipe.id" class="recipe-card">
           <img :src="recipe.image" :alt="recipe.title" class="recipe-image" />
           <h3 class="recipe-title">{{ recipe.title }}</h3>
           <p>Preparation time: {{ recipe.readyInMinutes }} minutes</p>
@@ -127,7 +127,7 @@ export default {
       try {
         const response = await axios.get(`https://api.spoonacular.com/recipes/random`, {
           params: {
-            number: 20, // jumlah resep yang ditampilkan
+            number: 30, // jumlah resep yang ditampilkan
             apiKey: "7cfa6262a29f4f30989581822849929f" 
           }
         });
@@ -135,6 +135,13 @@ export default {
       } catch (error) {
         console.error("Error fetching recipes:", error);
       }
+    },
+
+     filterRecipes() {
+      const query = this.searchQuery.toLowerCase();
+      this.filteredRecipes = this.recipes.filter(recipe =>
+        recipe.title.toLowerCase().includes(query)
+      );
     },
 
     // Handle ResepKu click
